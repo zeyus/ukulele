@@ -6,3 +6,4 @@ config:
   game: ""               # Status message shown when your bot is online
   trackDurationLimit: 0  # Maximum limit of track duration in minutes. Set to 0 for unlimited
   announceTracks: false  # Announce the start of a track
+  idleTimeMinutes: 10    # Time in minutes before the bot disconnects when idle
