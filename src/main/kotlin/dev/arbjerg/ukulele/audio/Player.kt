@@ -7,9 +7,14 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason
 import com.sedmelluq.discord.lavaplayer.track.playback.MutableAudioFrame
+import dev.arbjerg.ukulele.command.NowPlayingCommand
+import dev.arbjerg.ukulele.config.BotProps
 import dev.arbjerg.ukulele.data.GuildProperties
 import dev.arbjerg.ukulele.data.GuildPropertiesService
+import dev.arbjerg.ukulele.features.LeaveOnIdleService
 import net.dv8tion.jda.api.audio.AudioSendHandler
+import net.dv8tion.jda.api.entities.TextChannel
+import net.dv8tion.jda.api.entities.Guild
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
@@ -17,11 +22,18 @@ import java.nio.Buffer
 import java.nio.ByteBuffer
 
 
-class Player(val beans: Beans, guildProperties: GuildProperties) : AudioEventAdapter(), AudioSendHandler {
+class Player(
+        private val beans: Beans,
+        guildProperties: GuildProperties,
+        private val guild: Guild
+) : AudioEventAdapter(), AudioSendHandler {
     @Component
     class Beans(
             val apm: AudioPlayerManager,
-            val guildProperties: GuildPropertiesService
+            val guildProperties: GuildPropertiesService,
+            val nowPlayingCommand: NowPlayingCommand,
+            val botProps: BotProps,
+            val leaveOnIdleService: LeaveOnIdleService
     )
 
     private val guildId = guildProperties.guildId
@@ -58,6 +70,10 @@ class Player(val beans: Beans, guildProperties: GuildProperties) : AudioEventAda
     val isPaused : Boolean
         get() = player.isPaused
 
+    var isRepeating : Boolean = false
+
+    var lastChannel: TextChannel? = null
+
     /**
      * @return whether or not we started playing
      */
@@ -84,7 +100,12 @@ class Player(val beans: Beans, guildProperties: GuildProperties) : AudioEventAda
             newRange = newRange.first - 1 .. newRange.last - 1
         }
         if (newRange.last >= 0) skipped.addAll(queue.removeRange(newRange))
-        if (skipped.first() == player.playingTrack) player.stopTrack()
+        if (skipped.first() == player.playingTrack) {
+            if(isRepeating){
+                queue.add(player.playingTrack.makeClone())
+            }
+            player.stopTrack()
+        }
         return skipped
     }
 
@@ -96,14 +117,41 @@ class Player(val beans: Beans, guildProperties: GuildProperties) : AudioEventAda
         player.isPaused = false
     }
 
+    fun shuffle() {
+        queue.shuffle()
+    }
+
     fun stop() {
         queue.clear()
         player.stopTrack()
     }
 
+    fun seek(position: Long) {
+        player.playingTrack.position = position
+    }
+
+    override fun onTrackStart(player: AudioPlayer, track: AudioTrack) {
+        if (beans.botProps.announceTracks) {
+            lastChannel?.sendMessage(beans.nowPlayingCommand.buildEmbed(track))?.queue()
+        }
+
+        log.debug("onTrackStart called for player in guild {}", guild.idLong)
+        beans.leaveOnIdleService.destroyTimer(guild)
+    }
+
     override fun onTrackEnd(player: AudioPlayer, track: AudioTrack, endReason: AudioTrackEndReason) {
-        val new = queue.take() ?: return
-        player.playTrack(new)
+        log.debug("onTrackEnd called for player in guild {}", guild.idLong)
+        if (isRepeating && endReason.mayStartNext) {
+            queue.add(track.makeClone())
+        }
+        val new = queue.take()
+        if (new != null) {
+            player.playTrack(new)
+        }
+
+        if (remainingDuration <= 0) {
+            beans.leaveOnIdleService.onQueueEmpty(guild)
+        }
     }
 
     override fun onTrackException(player: AudioPlayer, track: AudioTrack, exception: FriendlyException) {
