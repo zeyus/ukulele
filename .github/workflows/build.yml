@@ -39,8 +39,8 @@ jobs:
       uses: docker/build-push-action@v2.2.0
       if: github.repository == 'zeyus/ukulele'
       with:
-        tags: ghcr.io/freyacodes/ukulele:${{env.BRANCH_NAME}}
+        tags: ghcr.io/zeyus/ukulele:${{env.BRANCH_NAME}}
         load: true
         context: .
-    - run: docker push ghcr.io/freyacodes/ukulele:${{env.BRANCH_NAME}}
+    - run: docker push ghcr.io/zeyus/ukulele:${{env.BRANCH_NAME}}
       if: github.repository == 'zeyus/ukulele'
