@@ -39,10 +39,10 @@ class SkipCommand : Command("skip", "s") {
         1 -> reply("Skipped `${skipped.first().info.title}`")
         else -> reply("Skipped `${skipped.size} tracks`")
     }
-
+    // updated help text from : https://github.com/freyacodes/ukulele/pull/64/files
     override fun HelpContext.provideHelp() {
-        addUsage("[count]")
-        addDescription("Skips a number of tracks.")
+        addUsage("[index]")
+        addDescription("Skips a single track.")
         addDescription("Defaults to the first track if no number is given.")
         addUsage("<from> <to>")
         addDescription("Skips a range of tracks.")

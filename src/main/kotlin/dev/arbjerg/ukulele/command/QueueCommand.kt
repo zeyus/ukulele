@@ -48,8 +48,9 @@ class QueueCommand(
         val offset = pageSize * (pageIndex - 1)
         val pageEnd = (offset + pageSize).coerceAtMost(tracks.size)
 
+        // added author from: https://github.com/freyacodes/ukulele/pull/56/files
         tracks.subList(offset, pageEnd).forEachIndexed { i, t ->
-            appendLine("`[${offset + i + 1}]` **${t.info.title}** `[${if (t.info.isStream) "Live" else TextUtils.humanReadableTime(t.duration)}]`")
+            appendLine("`[${offset + i + 1}]` **${t.info.author} -- ${t.info.title}** `[${if (t.info.isStream) "Live" else TextUtils.humanReadableTime(t.duration)}]`")
         }
     }
 

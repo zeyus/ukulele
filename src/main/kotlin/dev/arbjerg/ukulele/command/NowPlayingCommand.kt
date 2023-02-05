@@ -34,8 +34,9 @@ class NowPlayingCommand : Command ("nowplaying", "np") {
         val timeField = if (track.info.isStream) "[Live]" else "[${TextUtils.humanReadableTime(track.position)} / ${TextUtils.humanReadableTime(track.info.length)}]"
 
         //Set up common parts of the embed
+        // added author from: https://github.com/freyacodes/ukulele/pull/56/files
         val message = EmbedBuilder()
-                .setTitle(track.info.title, track.info.uri)
+                .setTitle(track.info.author + " -- " + track.info.title, track.info.uri)
                 .setFooter("Source: ${track.sourceManager.sourceName}")
 
         //Prepare embeds for overrides.
