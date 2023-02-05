@@ -18,9 +18,13 @@ class VolumeCommand(val players: PlayerRegistry) : Command("volume", "v") {
         val formerVolume = player.volume
         // adapted from: https://github.com/freyacodes/ukulele/pull/59/commits/c61239de105f26d7680c8338b4c346192955c37a
         // clamp the volume to 0-150
-        if (num < 0) num = 0
-        if (num > 150) num = 150
-        player.volume = num
+        if (num < 0) {
+            player.volume = 0
+        } else if (num > 150) {
+            player.volume = 150
+        } else {
+            player.volume = num
+        }
         reply("Changed volume from ${formerVolume}% to ${player.volume}%.")
     }
 
