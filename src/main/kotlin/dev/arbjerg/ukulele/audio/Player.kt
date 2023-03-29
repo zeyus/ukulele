@@ -14,6 +14,7 @@ import dev.arbjerg.ukulele.data.GuildPropertiesService
 import dev.arbjerg.ukulele.features.LeaveOnIdleService
 import net.dv8tion.jda.api.audio.AudioSendHandler
 import net.dv8tion.jda.api.entities.TextChannel
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel
 import net.dv8tion.jda.api.entities.Guild
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -132,7 +133,7 @@ class Player(
 
     override fun onTrackStart(player: AudioPlayer, track: AudioTrack) {
         if (beans.botProps.announceTracks) {
-            lastChannel?.sendMessage(beans.nowPlayingCommand.buildEmbed(track))?.queue()
+            lastChannel?.sendMessageEmbeds(beans.nowPlayingCommand.buildEmbed(track))?.queue()
         }
 
         log.debug("onTrackStart called for player in guild {}", guild.idLong)

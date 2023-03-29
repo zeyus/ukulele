@@ -6,9 +6,9 @@ import net.dv8tion.jda.api.sharding.ShardManager
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import net.dv8tion.jda.api.requests.GatewayIntent.*
-import net.dv8tion.jda.api.requests.restaction.MessageAction
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder
 import net.dv8tion.jda.api.utils.cache.CacheFlag
+import net.dv8tion.jda.api.utils.messages.MessageRequest
 import javax.security.auth.login.LoginException
 import kotlin.concurrent.thread
 
@@ -16,7 +16,7 @@ import kotlin.concurrent.thread
 class JdaConfig {
 
     init {
-        MessageAction.setDefaultMentions(emptyList())
+        MessageRequest.setDefaultMentions(emptyList())
     }
 
     @Bean
@@ -29,11 +29,12 @@ class JdaConfig {
                 GUILD_VOICE_STATES,
                 GUILD_MESSAGES,
                 GUILD_BANS,
-                DIRECT_MESSAGES
+                DIRECT_MESSAGES,
+                MESSAGE_CONTENT
         )
 
         val builder = DefaultShardManagerBuilder.create(botProps.token, intents)
-                .disableCache(CacheFlag.ACTIVITY, CacheFlag.EMOTE, CacheFlag.CLIENT_STATUS)
+                .disableCache(CacheFlag.ACTIVITY, CacheFlag.EMOJI, CacheFlag.CLIENT_STATUS)
                 .setBulkDeleteSplittingEnabled(false)
                 .setEnableShutdownHook(false)
                 .setAutoReconnect(true)
