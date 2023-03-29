@@ -2,6 +2,7 @@ package dev.arbjerg.ukulele.jda
 
 import dev.arbjerg.ukulele.features.LeaveOnIdleService
 import net.dv8tion.jda.api.entities.channel.ChannelType
+import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel
 import net.dv8tion.jda.api.events.StatusChangeEvent
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
@@ -25,12 +26,12 @@ class EventHandler(private val commandManager: CommandManager, private val leave
     }
 
     override fun onGuildVoiceUpdate(event: GuildVoiceUpdateEvent) {
-        VoiceChannel channelJoined = event.getChannelJoined();
+        VoiceChannel channelJoined = event.getChannelJoined()
         if (channelJoined != null) {
             log.info("Joining voice channel {} in guild {}", channelJoined.getId(), event.getGuild().getName())
             return
         } 
-        VoiceChannel channelLeft = event.getChannelLeft();
+        VoiceChannel channelLeft = event.getChannelLeft()
         if (channelLeft != null) {
             log.info("Leaving voice channel {} in guild {}", channelLeft.getId(), event.getGuild().getName())
             leaveOnIdleService.destroyTimer(event.getGuild())
