@@ -26,12 +26,12 @@ class EventHandler(private val commandManager: CommandManager, private val leave
     }
 
     override fun onGuildVoiceUpdate(event: GuildVoiceUpdateEvent) {
-        VoiceChannel channelJoined = event.getChannelJoined()
+        val channelJoined: VoiceChannel = event.getChannelJoined()
         if (channelJoined != null) {
             log.info("Joining voice channel {} in guild {}", channelJoined.getId(), event.getGuild().getName())
             return
         } 
-        VoiceChannel channelLeft = event.getChannelLeft()
+        val channelLeft: VoiceChannel = event.getChannelLeft()
         if (channelLeft != null) {
             log.info("Leaving voice channel {} in guild {}", channelLeft.getId(), event.getGuild().getName())
             leaveOnIdleService.destroyTimer(event.getGuild())
