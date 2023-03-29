@@ -20,7 +20,6 @@ class HelpCommand : Command("help") {
                     beans.commandManager.getCommands().forEach {
                         appendLine((listOf(it.name) + it.aliases).joinToString())
                     }
-                .append("\nUse \"${trigger} <command>\" to see more details.")
                 }))
                 .addContent("\nUse \"${trigger} <command>\" to see more details.")
             replyMsg(msg.build())

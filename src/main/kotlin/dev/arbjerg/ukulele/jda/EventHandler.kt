@@ -24,7 +24,7 @@ class EventHandler(private val commandManager: CommandManager, private val leave
         log.info("{}: {} -> {}", event.entity.shardInfo, event.oldStatus, event.newStatus)
     }
 
-    override fun onGuildVoiceUpdate(event: GuildVoiceJoinEvent) {
+    override fun onGuildVoiceUpdate(event: GuildVoiceUpdateEvent) {
         if (event.getChannelJoined() != null) {
             log.info("Joining voice channel {} in guild {}", event.getChannelJoined().getId(), event.getGuild().getName())
             return
@@ -33,9 +33,5 @@ class EventHandler(private val commandManager: CommandManager, private val leave
             leaveOnIdleService.destroyTimer(event.getGuild())
             return
         }
-    }
-
-    override fun onGuildVoiceUpdate(event: GuildVoiceLeaveEvent) {
-        
     }
 }
