@@ -29,6 +29,7 @@ class JdaConfig {
                 GUILD_VOICE_STATES,
                 GUILD_MESSAGES,
                 GUILD_BANS,
+                GUILD_PRESENCES,
                 DIRECT_MESSAGES,
                 MESSAGE_CONTENT
         )
