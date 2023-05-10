@@ -1,7 +1,7 @@
 package dev.arbjerg.ukulele.command
 
 import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioTrack
-# twitch embed support: https://github.com/freyacodes/ukulele/pull/70/files
+// twitch embed support: https://github.com/freyacodes/ukulele/pull/70/files
 import com.sedmelluq.discord.lavaplayer.source.twitch.TwitchStreamAudioTrack
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioTrack
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
@@ -36,7 +36,7 @@ class NowPlayingCommand : Command ("nowplaying", "np") {
     private class GetEmbed(val track: AudioTrack) {
         val timeField = if (track.info.isStream) "[Live]" else "[${TextUtils.humanReadableTime(track.position)} / ${TextUtils.humanReadableTime(track.info.length)}]"
 
-        //Set up common parts of the embed
+        // Set up common parts of the embed
         // added author from: https://github.com/freyacodes/ukulele/pull/56/files
         val message = EmbedBuilder()
                 .setTitle(track.info.author + " -- " + track.info.title, track.info.uri)
