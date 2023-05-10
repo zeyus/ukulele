@@ -8,8 +8,8 @@ plugins {
     kotlin("plugin.spring") version "1.4.10"
 }
 
-group = "dev.arbjerg"
-version = "0.1"
+group = "com.zeyus"
+version = "0.2"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
@@ -19,15 +19,15 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.DV8FromTheWorld:JDA:v5.0.0-beta.6")
+    implementation("com.github.DV8FromTheWorld:JDA:v5.0.0-beta.9")
     //implementation("com.sedmelluq:lavaplayer:1.3.78")
-    implementation("com.github.walkyst.lavaplayer-fork:lavaplayer:1.4.0")
+    implementation("com.github.walkyst.lavaplayer-fork:lavaplayer:1.4.1")
     implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
 
     runtimeOnly("com.h2database:h2")
     implementation("io.r2dbc:r2dbc-h2")
     implementation("org.flywaydb:flyway-core")
-    implementation("com.github.ben-manes.caffeine:caffeine:2.8.6")
+    implementation("com.github.ben-manes.caffeine:caffeine:3.1.6")
 
 
     implementation("org.jetbrains.kotlin:kotlin-reflect")
